@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-pictures-path name="mis_imagenes" path="TourFotoApp/" />
+    <external-pictures-path name="mis_imagenes" path="Taller2Movil/" />
     <cache-path name="imagenes_cache" path="imagenes/" />
 </paths>

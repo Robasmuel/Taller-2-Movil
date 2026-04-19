@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.tourfoto.app"
+    namespace = "com.example.taller2movil"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.tourfoto.app"
+        applicationId = "com.example.taller2movil"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
