@@ -136,7 +136,7 @@ private fun ContenidoCamara(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D0D0D))
+            .background(Color(0xFFF5F5F5))
     ) {
         Box(
             modifier = Modifier
@@ -260,36 +260,40 @@ private fun InsigniaRecorrido(modifier: Modifier = Modifier) {
 
 @Composable
 private fun BotonDisparador(habilitado: Boolean, alHacerClick: () -> Unit) {
-    val colorBorde = if (habilitado) Color.White else Color.Gray
     Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(72.dp)
-            .border(4.dp, colorBorde, CircleShape)
-            .padding(6.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(
+                if (habilitado) Color(0xFF5B9BD5) else Color(0xFFB0BEC5)
+            )
+            .clickable(enabled = habilitado, onClick = alHacerClick)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(CircleShape)
-                .background(if (habilitado) Color.White else Color.DarkGray)
-                .clickable(enabled = habilitado, onClick = alHacerClick)
+        Icon(
+            imageVector = Icons.Default.CameraAlt,
+            contentDescription = "Tomar foto",
+            tint = Color.White,
+            modifier = Modifier.size(32.dp)
         )
     }
 }
 
 @Composable
 private fun BotonCambiarCamara(alHacerClick: () -> Unit) {
-    IconButton(
-        onClick = alHacerClick,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(56.dp)
-            .background(Color(0x44FFFFFF), CircleShape)
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFF5B9BD5))
+            .clickable(onClick = alHacerClick)
     ) {
         Icon(
             imageVector = Icons.Default.FlipCameraAndroid,
             contentDescription = "Cambiar cámara",
             tint = Color.White,
-            modifier = Modifier.size(28.dp)
+            modifier = Modifier.size(26.dp)
         )
     }
 }
@@ -299,7 +303,7 @@ private fun TiraFotos(fotos: List<FotoRecorrido>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF1A1A1A))
+            .background(Color(0xFFF0F0F0))
             .padding(vertical = 8.dp)
     ) {
         Row(
@@ -309,11 +313,11 @@ private fun TiraFotos(fotos: List<FotoRecorrido>) {
             Icon(
                 Icons.Default.PhotoLibrary,
                 contentDescription = null,
-                tint = Color(0xFFB0B0B0),
+                tint = Color(0xFF888888),
                 modifier = Modifier.size(14.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
-            Text("Fotos del recorrido (${fotos.size})", color = Color(0xFFB0B0B0), fontSize = 12.sp)
+            Text("Fotos del recorrido (${fotos.size})", color = Color(0xFF888888), fontSize = 12.sp)
         }
 
         if (fotos.isEmpty()) {
@@ -323,7 +327,7 @@ private fun TiraFotos(fotos: List<FotoRecorrido>) {
                     .height(80.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Las fotos tomadas aparecerán aquí", color = Color(0xFF555555), fontSize = 12.sp)
+                Text("Las fotos tomadas aparecerán aquí", color = Color(0xFFAAAAAA), fontSize = 12.sp)
             }
         } else {
             LazyRow(
@@ -378,44 +382,30 @@ fun ContenidoPermisoDenegado(mensaje: String, alReintentar: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D0D0D)),
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(32.dp)
+            modifier = Modifier.padding(40.dp)
         ) {
             Icon(
-                Icons.Default.NoPhotography,
+                imageVector = Icons.Default.ErrorOutline,
                 contentDescription = null,
                 tint = Color(0xFFE53935),
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(48.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                "Permiso de Cámara Requerido",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                mensaje,
-                color = Color(0xFFAAAAAA),
+                text = mensaje,
+                color = Color(0xFFE53935),
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 lineHeight = 20.sp
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Button(
-                onClick = alReintentar,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935)),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Icon(Icons.Default.Settings, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Conceder Permiso")
+            TextButton(onClick = alReintentar) {
+                Text("Conceder permiso", color = Color(0xFF1565C0))
             }
         }
     }
