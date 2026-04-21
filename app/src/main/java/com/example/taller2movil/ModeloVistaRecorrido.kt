@@ -42,18 +42,7 @@ class ModeloVistaRecorrido : ViewModel() {
     // Agregar puntos de la ruta
     fun agregarPuntoRuta(lat: Double, lng: Double) {
         if (!recorridoActivo.value) return
-
-        val nuevo = PuntoRuta(lat, lng)
-
-        val ultimo = puntosRuta.lastOrNull()
-
-        // evitar duplicados exactos
-        if (ultimo != null &&
-            ultimo.latitud == nuevo.latitud &&
-            ultimo.longitud == nuevo.longitud
-        ) return
-
-        puntosRuta.add(nuevo)
+        puntosRuta.add(PuntoRuta(lat, lng))
     }
 
     fun cargarRutaPrueba() {
