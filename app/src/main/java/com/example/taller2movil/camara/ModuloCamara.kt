@@ -337,7 +337,7 @@ private fun TiraFotos(fotos: List<FotoRecorrido>) {
                     .fillMaxWidth()
                     .height(90.dp)
             ) {
-                items(fotos, key = { it.nombreArchivo }) { foto ->
+                items(fotos, key = { it.nombre }) { foto ->
                     MiniaturaFoto(foto)
                 }
             }
@@ -355,7 +355,7 @@ private fun MiniaturaFoto(foto: FotoRecorrido) {
     ) {
         AsyncImage(
             model = foto.uri,
-            contentDescription = foto.nombreArchivo,
+            contentDescription = foto.nombre,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -367,7 +367,7 @@ private fun MiniaturaFoto(foto: FotoRecorrido) {
                 .background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xCC000000))))
         )
         Text(
-            text = foto.nombreArchivo.removePrefix("TourFoto_").removeSuffix(".jpg").take(8),
+            text = foto.nombre.removePrefix("TourFoto_").removeSuffix(".jpg").take(8),
             color = Color.White,
             fontSize = 9.sp,
             modifier = Modifier
@@ -442,10 +442,10 @@ private fun tomarFoto(
             override fun onImageSaved(resultado: ImageCapture.OutputFileResults) {
                 val uriGuardado: Uri = resultado.savedUri ?: Uri.EMPTY
                 val nuevaFoto = FotoRecorrido(
-                    uri = uriGuardado,
-                    nombreArchivo = nombreArchivo,
-                    tomadaEn = LocalDateTime.now(),
-                    ubicacion = ubicacion ?: LatLng(0.0, 0.0)
+                    uri = uriGuardado.toString(),
+                    nombre = nombreArchivo,
+                    latitud = ubicacion?.latitude ?: 0.0,
+                    longitud = ubicacion?.longitude ?: 0.0
                 )
                 ContextCompat.getMainExecutor(contexto).execute {
                     alGuardarFoto(nuevaFoto)
