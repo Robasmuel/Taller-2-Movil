@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.google.android.gms.maps.model.LatLng
 import com.example.taller2movil.camara.ModuloCamara
 import com.example.taller2movil.ui.theme.TemaFotoApp
+import com.example.taller2movil.mapa.ModuloMapa
 
 class MainActivity : ComponentActivity() {
 
@@ -53,16 +54,14 @@ fun AppTaller2Movil(modeloVista: ModeloVistaRecorrido) {
 
         // Mitad inferior — Módulo Mapa (Persona 2)
         // TODO Persona 2: reemplaza este Box con tu ModuloMapa
-        // ModuloMapa(
-        //     modeloVista = modeloVista,
-        //     alCambiarUbicacion = { ubicacionActual = it }
-        // )
-        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-            Text(
-                text = "[ Módulo Mapa — Persona 2 ]",
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
-        }
+        ModuloMapa(
+            modeloVista = modeloVista,
+            alCambiarUbicacion = {
+                val it = null
+                ubicacionActual = it
+            },
+            modifier = Modifier.weight(1f)
+        )
+
     }
 }

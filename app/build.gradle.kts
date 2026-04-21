@@ -58,5 +58,10 @@ dependencies {
     implementation(libs.servicios.ubicacion)
     implementation(libs.coil.compose)
     implementation(libs.androidx.interfaz.exif)
+    implementation("com.google.android.gms:play-services-maps:8.2.0")
+    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     debugImplementation(libs.androidx.ui.tooling)
+
 }

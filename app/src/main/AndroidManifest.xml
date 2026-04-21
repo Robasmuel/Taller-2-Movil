@@ -8,6 +8,8 @@
 
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -40,7 +42,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="TU_CLAVE_API_MAPS_AQUI" />
+            android:value="AIzaSyA4-2oMSPqwzCr97RBZYkNIszsDY6rVsVQ" />
 
     </application>
 
