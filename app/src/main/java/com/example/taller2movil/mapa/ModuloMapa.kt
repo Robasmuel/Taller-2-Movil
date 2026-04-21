@@ -4,16 +4,12 @@ import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +31,6 @@ fun ModuloMapa(
     alCambiarUbicacion: (LatLng) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -50,17 +45,14 @@ fun ModuloMapa(
 
     val puntosRuta = modeloVista.puntosRuta
     val fotos = modeloVista.fotos
-    val recorridoActivo = modeloVista.recorridoActivo.value
 
     val cameraPositionState = rememberCameraPositionState()
 
-    // 🔹 INICIAR GPS SOLO CUANDO YA HAY PERMISO
+    // Iniciar GPS cuando hay permiso
     LaunchedEffect(permisoUbicacion.status.isGranted) {
         if (permisoUbicacion.status.isGranted && locationCallback == null) {
-
             locationCallback = rastreadorUbicacion.iniciarActualizaciones { lat, lng ->
                 val nueva = LatLng(lat, lng)
-
                 ubicacionActual = nueva
                 alCambiarUbicacion(nueva)
 
@@ -71,7 +63,7 @@ fun ModuloMapa(
         }
     }
 
-    // 🔹 DETENER GPS
+    // Detener GPS al salir
     DisposableEffect(Unit) {
         onDispose {
             locationCallback?.let {
@@ -80,13 +72,13 @@ fun ModuloMapa(
         }
     }
 
+    // Bug corregido: botones FUERA del GoogleMap, dentro de un Box
     Box(
         modifier = modifier
             .fillMaxSize()
             .border(1.dp, Color(0xFFB8C7FA), RoundedCornerShape(12.dp))
     ) {
-
-        // 🗺️ MAPA
+        // Mapa
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
@@ -99,19 +91,16 @@ fun ModuloMapa(
                 compassEnabled = true
             )
         ) {
-
-            // 🔵 RUTA
+            // Ruta
             if (puntosRuta.size >= 2) {
                 Polyline(
-                    points = puntosRuta.map {
-                        LatLng(it.latitud, it.longitud)
-                    },
+                    points = puntosRuta.map { LatLng(it.latitud, it.longitud) },
                     color = Color(0xFF0B4EA2),
                     width = 12f
                 )
             }
 
-            // 📍 MARCADORES
+            // Marcadores de fotos
             fotos.forEach { foto ->
                 MarkerInfoWindow(
                     state = MarkerState(
@@ -119,7 +108,6 @@ fun ModuloMapa(
                     ),
                     title = foto.nombre
                 ) { marker ->
-
                     Surface(
                         color = Color.White,
                         shape = RoundedCornerShape(6.dp),
@@ -133,72 +121,71 @@ fun ModuloMapa(
                     }
                 }
             }
+        }
 
-            // 🔹 BOTONES
-            Column(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-
-                // ▶️ INICIAR
-                FloatingActionButton(
-                    onClick = {
-                        if (!permisoUbicacion.status.isGranted) {
-                            permisoUbicacion.launchPermissionRequest()
-                        } else {
-                            modeloVista.iniciarRecorrido(
-                                ubicacionActual?.latitude,
-                                ubicacionActual?.longitude
-                            )
-                        }
-                    },
-                    containerColor = Color(0xFFD7E8FF),
-                    contentColor = Color(0xFF184E93)
-                ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = "Iniciar")
-                }
-
-                // 🗑 BORRAR
-                FloatingActionButton(
-                    onClick = { modeloVista.borrarRecorrido() },
-                    containerColor = Color(0xFFFFE5E5),
-                    contentColor = Color.Red
-                ) {
-                    Icon(Icons.Default.Delete, contentDescription = "Borrar")
-                }
-            }
-
-            // 📍 BOTÓN CENTRAR
+        // Botones de control — ahora correctamente fuera del GoogleMap
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Botón iniciar recorrido
             FloatingActionButton(
                 onClick = {
-                    scope.launch {
-                        ubicacionActual?.let {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newLatLngZoom(it, 17f)
-                            )
-                        }
+                    if (!permisoUbicacion.status.isGranted) {
+                        permisoUbicacion.launchPermissionRequest()
+                    } else {
+                        modeloVista.iniciarRecorrido(
+                            ubicacionActual?.latitude,
+                            ubicacionActual?.longitude
+                        )
                     }
                 },
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(16.dp)
-                    .size(48.dp),
-                containerColor = Color.White
+                containerColor = Color(0xFFD7E8FF),
+                contentColor = Color(0xFF184E93)
             ) {
-                Icon(Icons.Default.MyLocation, contentDescription = "Ubicación")
+                Icon(Icons.Default.PlayArrow, contentDescription = "Iniciar")
             }
 
-            // 🧪 DEBUG (puedes quitar después)
-            Text(
-                text = "Puntos: ${puntosRuta.size}",
-                color = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .background(Color.White)
-                    .padding(8.dp)
-            )
+            // Botón borrar recorrido
+            FloatingActionButton(
+                onClick = { modeloVista.borrarRecorrido() },
+                containerColor = Color(0xFFFFE5E5),
+                contentColor = Color.Red
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "Borrar")
+            }
         }
+
+        // Botón centrar ubicación
+        FloatingActionButton(
+            onClick = {
+                scope.launch {
+                    ubicacionActual?.let {
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(it, 17f)
+                        )
+                    }
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+                .size(48.dp),
+            containerColor = Color.White
+        ) {
+            Icon(Icons.Default.MyLocation, contentDescription = "Ubicación")
+        }
+
+        // Debug — quitar cuando todo funcione
+        Text(
+            text = "Puntos: ${puntosRuta.size}",
+            color = Color.Black,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .background(Color.White)
+                .padding(8.dp)
+        )
     }
 }

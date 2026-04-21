@@ -8,10 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import com.google.android.gms.maps.model.LatLng
 import com.example.taller2movil.camara.ModuloCamara
 import com.example.taller2movil.ui.theme.TemaFotoApp
@@ -39,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppTaller2Movil(modeloVista: ModeloVistaRecorrido) {
-    // Puente de ubicación: Persona 2 actualiza esto, Persona 1 lo lee
+    // Puente de ubicación entre módulos
     var ubicacionActual by remember { mutableStateOf<LatLng?>(null) }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -53,15 +50,13 @@ fun AppTaller2Movil(modeloVista: ModeloVistaRecorrido) {
         }
 
         // Mitad inferior — Módulo Mapa (Persona 2)
-        // TODO Persona 2: reemplaza este Box con tu ModuloMapa
         ModuloMapa(
             modeloVista = modeloVista,
-            alCambiarUbicacion = {
-                val it = null
-                ubicacionActual = it
+            alCambiarUbicacion = { nuevaUbicacion ->
+                // Bug corregido: ahora sí se pasa la ubicación real
+                ubicacionActual = nuevaUbicacion
             },
             modifier = Modifier.weight(1f)
         )
-
     }
 }
