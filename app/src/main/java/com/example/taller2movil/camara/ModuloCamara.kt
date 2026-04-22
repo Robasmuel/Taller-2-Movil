@@ -449,7 +449,7 @@ private fun tomarFoto(
                 )
                 ContextCompat.getMainExecutor(contexto).execute {
                     alGuardarFoto(nuevaFoto)
-                    Toast.makeText(contexto, "📸 Foto guardada en la galería", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(contexto, " Foto guardada en la galería", Toast.LENGTH_SHORT).show()
                 }
             }
 

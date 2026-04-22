@@ -41,7 +41,7 @@ fun AppTaller2Movil(modeloVista: ModeloVistaRecorrido) {
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        // Mitad superior — Módulo Cámara (Persona 1)
+        // Mitad superior (Módulo Cámara)
         Box(modifier = Modifier.weight(1f)) {
             ModuloCamara(
                 modeloVista = modeloVista,
@@ -49,7 +49,7 @@ fun AppTaller2Movil(modeloVista: ModeloVistaRecorrido) {
             )
         }
 
-        // Mitad inferior — Módulo Mapa (Persona 2)
+        // Mitad inferior (Módulo Mapa)
         ModuloMapa(
             modeloVista = modeloVista,
             alCambiarUbicacion = { nuevaUbicacion ->

@@ -77,7 +77,6 @@ fun ModuloMapa(
         }
     }
 
-    // Bug corregido: botones FUERA del GoogleMap, dentro de un Box
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -156,7 +155,7 @@ fun ModuloMapa(
             }
         }
 
-        // Botones de control — ahora correctamente fuera del GoogleMap
+        // Botones de control
         Column(
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -164,7 +163,6 @@ fun ModuloMapa(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Botón iniciar recorrido/detener recorrido
-            // Botón iniciar/detener recorrido (toggle)
             FloatingActionButton(
                 onClick = {
                     if (!permisoUbicacion.status.isGranted) {

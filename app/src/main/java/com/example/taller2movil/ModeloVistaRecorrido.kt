@@ -21,7 +21,6 @@ class ModeloVistaRecorrido : ViewModel() {
     fun iniciarRecorrido(lat: Double?, lng: Double?) {
         recorridoActivo.value = true
         puntosRuta.clear()
-        // Bug corregido: ya no pisamos el parámetro lat con null
         if (lat != null && lng != null) {
             agregarPuntoRuta(lat, lng)
         }
