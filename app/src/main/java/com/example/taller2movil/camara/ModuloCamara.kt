@@ -440,9 +440,9 @@ private fun tomarFoto(
     captura.takePicture(opcionesSalida, ejecutor,
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(resultado: ImageCapture.OutputFileResults) {
-                val uriGuardado: Uri = resultado.savedUri ?: Uri.EMPTY
+                val uriGuardado: Uri = resultado.savedUri ?: return
                 val nuevaFoto = FotoRecorrido(
-                    uri = uriGuardado.toString(),
+                    uri = uriGuardado,
                     nombre = nombreArchivo,
                     latitud = ubicacion?.latitude ?: 0.0,
                     longitud = ubicacion?.longitude ?: 0.0
@@ -452,6 +452,7 @@ private fun tomarFoto(
                     Toast.makeText(contexto, "📸 Foto guardada en la galería", Toast.LENGTH_SHORT).show()
                 }
             }
+
 
             override fun onError(excepcion: ImageCaptureException) {
                 Log.e("ModuloCamara", "Error al capturar: ${excepcion.message}", excepcion)

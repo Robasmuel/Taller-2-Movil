@@ -1,7 +1,6 @@
 package com.example.taller2movil.mapa
 
 import android.Manifest
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,13 +8,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.taller2movil.ModeloVistaRecorrido
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.LocationCallback
@@ -100,8 +105,9 @@ fun ModuloMapa(
                 )
             }
 
-            // Marcadores de fotos
+            // Marcadores de fotos con miniatura
             fotos.forEach { foto ->
+                val context = LocalContext.current
                 MarkerInfoWindow(
                     state = MarkerState(
                         position = LatLng(foto.latitud, foto.longitud)
@@ -110,14 +116,41 @@ fun ModuloMapa(
                 ) { marker ->
                     Surface(
                         color = Color.White,
-                        shape = RoundedCornerShape(6.dp),
+                        shape = RoundedCornerShape(8.dp),
                         shadowElevation = 6.dp
                     ) {
-                        Text(
-                            text = marker.title ?: "",
-                            color = Color.Black,
-                            modifier = Modifier.padding(8.dp)
-                        )
+                        Column(
+                            modifier = Modifier
+                                .width(140.dp)
+                                .padding(8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            AsyncImage(
+                                model = foto.uri,
+                                contentDescription = foto.nombre,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(90.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = foto.nombre
+                                    .removePrefix("TourFoto_")
+                                    .removeSuffix(".jpg"),
+                                color = Color.Black,
+                                fontSize = 10.sp,
+                                textAlign = TextAlign.Center,
+                                maxLines = 1
+                            )
+                            Text(
+                                text = "%.5f, %.5f".format(foto.latitud, foto.longitud),
+                                color = Color.Gray,
+                                fontSize = 9.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }
@@ -130,11 +163,14 @@ fun ModuloMapa(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Botón iniciar recorrido
+            // Botón iniciar recorrido/detener recorrido
+            // Botón iniciar/detener recorrido (toggle)
             FloatingActionButton(
                 onClick = {
                     if (!permisoUbicacion.status.isGranted) {
                         permisoUbicacion.launchPermissionRequest()
+                    } else if (modeloVista.recorridoActivo.value) {
+                        modeloVista.detenerRecorrido()
                     } else {
                         modeloVista.iniciarRecorrido(
                             ubicacionActual?.latitude,
@@ -142,10 +178,17 @@ fun ModuloMapa(
                         )
                     }
                 },
-                containerColor = Color(0xFFD7E8FF),
-                contentColor = Color(0xFF184E93)
+                containerColor = if (modeloVista.recorridoActivo.value)
+                    Color(0xFFFFE5E5) else Color(0xFFD7E8FF),
+                contentColor = if (modeloVista.recorridoActivo.value)
+                    Color.Red else Color(0xFF184E93)
             ) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Iniciar")
+                Icon(
+                    imageVector = if (modeloVista.recorridoActivo.value)
+                        Icons.Default.Stop else Icons.Default.PlayArrow,
+                    contentDescription = if (modeloVista.recorridoActivo.value)
+                        "Detener" else "Iniciar"
+                )
             }
 
             // Botón borrar recorrido
@@ -178,14 +221,6 @@ fun ModuloMapa(
             Icon(Icons.Default.MyLocation, contentDescription = "Ubicación")
         }
 
-        // Debug — quitar cuando todo funcione
-        Text(
-            text = "Puntos: ${puntosRuta.size}",
-            color = Color.Black,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .background(Color.White)
-                .padding(8.dp)
-        )
+
     }
 }

@@ -62,6 +62,7 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:2.11.4")
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
     debugImplementation(libs.androidx.ui.tooling)
 
 }
